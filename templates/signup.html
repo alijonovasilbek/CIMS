@@ -83,6 +83,16 @@
                             </div>
                         </div>
 
+                        <div class="form-floating mb-3">
+                            <input type="company_code" name="company_code" class="form-control {% if form.company_code.errors %}is-invalid{% endif %}"
+                                   id="floatingCompany_code" placeholder="" value="{{ form.company_code.value|default_if_none:'' }}">
+                            <label for="floatingCompany_code">Company code</label>
+                            <div class="invalid-feedback">
+                                {{ form.company_code.errors.as_text }}
+                            </div>
+                        </div>
+
+
                         <!-- Password1 -->
                         <div class="form-floating mb-3">
                             <input type="password" name="password1" class="form-control {% if form.password1.errors %}is-invalid{% endif %}"

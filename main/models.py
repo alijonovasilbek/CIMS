@@ -30,6 +30,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=255)
     surname = models.CharField(max_length=255)
     password = models.CharField(max_length=255)
+    company_code=models.CharField(max_length=255)
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)

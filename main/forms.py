@@ -5,10 +5,11 @@ from .models import User
 class UserRegisterForm(UserCreationForm):
     name = forms.CharField(max_length=100)
     surname = forms.CharField(max_length=100)
+    company_code = forms.CharField(max_length=100)
 
     class Meta:
         model = User
-        fields = ['name', 'surname', 'email', 'password1', 'password2']
+        fields = ['name', 'surname', 'email','company_code', 'password1', 'password2']
 
 # forms.py
 from django import forms

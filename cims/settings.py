@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     #custom
     'cims',
     'main',
+    'logistic',
+    'main1'
 ]
 
 MIDDLEWARE = [
@@ -64,22 +66,36 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cims.wsgi.application'
 
-# settings.py
-# settings.py
+
 AUTHENTICATION_BACKENDS = [
-    'main.auth_backends.EmailBackend',  # Maxsus backend
-    'django.contrib.auth.backends.ModelBackend',  # Standart backend
+    'main.auth_backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    },
+    'postgres': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'base1',
+        'USER': 'postgres',
+        'PASSWORD': '2222',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
+    'postgres1': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'base2',
+        'USER': 'postgres',
+        'PASSWORD': '2222',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
+
 }
 
 
@@ -107,9 +123,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # settings.py
 AUTH_USER_MODEL = 'main.User'
 
-
-
-
+# settings.py
+LOGIN_URL = '/login/'
 
 
 
