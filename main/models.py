@@ -1,5 +1,4 @@
 
-from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
@@ -48,49 +47,3 @@ class User(AbstractBaseUser, PermissionsMixin):
     def has_module_perms(self, app_label):
         return self.is_superuser
 
-
-class Todo(models.Model):
-    sender = models.ForeignKey(User, related_name="sent_todos", on_delete=models.CASCADE)
-    sender_name = models.CharField(max_length=255)
-    sender_surname = models.CharField(max_length=255)
-    message = models.TextField()
-    reciver = models.ForeignKey(User, related_name="received_todos", on_delete=models.CASCADE)
-    receiver_name = models.CharField(max_length=255)
-    status = models.CharField(max_length=50)
-
-
-class Payments(models.Model):
-    STATUS_CHOICES = [
-        ('paid', 'Paid'),
-        ('awaiting', 'Awaiting'),
-        ('unpaid', 'Unpaid'),
-    ]
-
-    date = models.DateField(auto_now_add=True)
-    invoice = models.CharField(max_length=20)
-    customer = models.CharField(max_length=255)
-    amount = models.IntegerField()
-    product = models.CharField(max_length=255)
-    status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='unpaid')
-
-
-    def __str__(self):
-        return f"{self.invoice} - {self.customer}"
-
-
-
-class Exhibition(models.Model):
-    event_name = models.CharField(max_length=255)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    city = models.CharField(max_length=255)
-    venue = models.CharField(max_length=255)
-    host = models.CharField(max_length=255)
-    organizer = models.CharField(max_length=255)
-    sector = models.CharField(max_length=255)
-    phone = models.CharField(max_length=50)
-    email = models.EmailField()
-    website = models.URLField()
-
-    def __str__(self):
-        return  f"{self.event_name}"

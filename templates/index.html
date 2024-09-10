@@ -46,7 +46,7 @@
         <!-- Sidebar Start -->
         <div class="sidebar pe-4 pb-3">
             <nav class="navbar bg-secondary navbar-dark">
-{#                <a href="{{url_for('index')}}" class="navbar-brand mx-4 mb-3">#}
+                <a href="http://cognilabs.org/" class="navbar-brand mx-4 mb-3" target="_blank">
                     <h3 class="text-primary">Cognilabs</h3>
                 </a>
                 <div class="d-flex align-items-center ms-4 mb-4">
@@ -55,16 +55,19 @@
                         <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                     </div>
                     <div class="ms-3">
-{#                        <h6 class="mb-0">{{user[7]}} {{user[8]}}</h6>#}
-{#                        <span>{{user[4]}}</span>#}
+                        <h6 class="mb-0">{{ user.name }}</h6>
+                        <span>{{ user.email}}</span>
                     </div>
                 </div>
                 <div class="navbar-nav w-100">
-{#                    <a href="{{url_for('index')}}" class="nav-item nav-link active">Dashboard</a>#}
-{##}
-{#                   #}
-{##}
-{#                    <a href="{{url_for('exhibitions')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Exhibitions</a>#}
+                    <a href="{% url 'index' %}" class="nav-item nav-link active">Dashboard</a>
+
+
+
+                    <a href="{% url  'all_payments' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Payments</a>
+                    <a href="{% url  'all_todos' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Todos</a>
+                    <a href="{% url  'all_exhibitions' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Exhibitions</a>
+                    <a href="{% url  'all_users' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Users</a>
 
                 </div>
             </nav>
@@ -79,12 +82,10 @@
                 <a href="index.html" class="navbar-brand d-flex d-lg-none me-4">
                     <h2 class="text-primary mb-0"><i class="fa fa-user-edit"></i></h2>
                 </a>
-                <a href="#" class="sidebar-toggler flex-shrink-0">
-                    <i class="fa fa-bars"></i>
-                </a>
-                <form class="d-none d-md-flex ms-4">
-                    <input class="form-control bg-dark border-0" type="search" placeholder="Search">
-                </form>
+{#                <a href="#" class="sidebar-toggler flex-shrink-0">#}
+{#                    <i class="fa fa-bars"></i>#}
+{#                </a>#}
+                
                 <div class="navbar-nav align-items-center ms-auto">
                     <div class="nav-item dropdown">
                         <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -185,7 +186,7 @@
                 <div class="bg-secondary text-center rounded p-4">
                     <div class="d-flex align-items-center justify-content-between mb-4">
                         <h6 class="mb-0">Payments</h6>
-                        <a href="">Show All</a>
+                        <a href="{% url 'all_payments' %}">Show All</a>
                     </div>
                     <div class="table-responsive">
                         <table class="table text-start align-middle table-bordered table-hover mb-0">
@@ -249,7 +250,8 @@
                         <div class="h-100 bg-secondary rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                 <h6 class="mb-0">Tasks</h6>
-                                <a href="">Show All</a>
+                                <a href="{% url 'all_todos' %}">Show All</a>
+                              
                             </div>
 
                             {% for task in todos %}
@@ -285,7 +287,7 @@
                         <div class="h-100 bg-secondary rounded p-4">
                             <div class="d-flex align-items-center justify-content-between mb-4">
                                 <h6 class="mb-0">Calender</h6>
-                                <a href="">Show All</a>
+                  
                             </div>
                             <div id="calender"></div> <!-- Calendar uchun id -->
                         </div>
@@ -295,7 +297,6 @@
                 </div>
             </div>
             <!-- Widgets End -->
-
             <div class="container-fluid">
                 <div class="row h-100 align-items-center justify-content-center" style="min-height: 100vh;">
                     <div class="col-12 col-lg-10">
@@ -382,6 +383,10 @@
                                 </div>
                             </form>
 
+            
+                 
+                   
+
                             <!-- Exhibition List Start -->
                             <h3 class="mb-4">Exhibitions</h3>
                             <div class="table-responsive">
@@ -413,6 +418,7 @@
                                             <td>{{ exhibition.8 }}</td>
                                             <td>{{ exhibition.9 }}</td>
                                             <td>{{ exhibition.10 }}</td>
+                                            <td>{{ exhibition.11 }}</td>
                                             <td>
                                                 <button type="button" class="btn btn-danger delete-exhibition" data-id="{{ exhibition.0 }}">Delete</button>
                                             </td>

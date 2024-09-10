@@ -124,8 +124,8 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = 'main.User'
 
 # settings.py
+# settings.py
 LOGIN_URL = '/login/'
-
 
 
 # Internationalization
@@ -138,6 +138,9 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+
+LOGIN_URL = '/'
 
 
 # Static files (CSS, JavaScript, Images)

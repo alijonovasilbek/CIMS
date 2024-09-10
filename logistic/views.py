@@ -1,38 +1,28 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
-
 from django.http import JsonResponse
-
-from django.utils import  timezone
-from  django.db.models import  Sum
 from django.shortcuts import redirect, render
 from django.db import connections
-from django.urls import reverse
 from django.utils import timezone
-
-
-
-
-
-
-
-def postgres_users(request):
-    with connections['base1'].cursor() as cursor:
-        cursor.execute("SELECT id, username, email, first_name, last_name FROM public.user")
-        rows = cursor.fetchall()
-    with connections['base2'].cursor() as cursor:
-        cursor.execute("SELECT id, username, email, first_name, last_name FROM public.user")
-        rows1 = cursor.fetchall()
-        print(rows1)
-    return render(request, 'postgres_users.html', {'users': rows,'info':rows1})
-
-
-
-
-
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import redirect
+from functools import wraps
+
+def company_code_check(company_code_value):
+    def decorator(view_func):
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            if request.user.company_code != company_code_value:
+                return redirect('login')
+            return view_func(request, *args, **kwargs)
+        return _wrapped_view
+    return decorator
+
+
+
+
+
 
 @login_required
+@company_code_check("site")
 def index(request):
     if request.method == "POST":
         if 'add_exhibition' in request.POST:
@@ -55,6 +45,9 @@ def index(request):
                     INSERT INTO exhibitions (event_name, start_date, end_date, city, venue, host, organizer, sector, phone, email, website)
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                 """, [event_name, start_date, end_date, city, venue, host, organizer, sector, phone, email, website])
+
+
+
 
         if 'delete_exhibition' in request.POST:
             exhibition_id = request.POST.get('id')
@@ -85,11 +78,16 @@ def index(request):
 
 
     with connections['postgres'].cursor() as cursor:
-        cursor.execute("SELECT * FROM todos WHERE receiver_id = %s", [request.user.id])
+        cursor.execute("SELECT * FROM todos LIMIT 2")
         todos = cursor.fetchall()
 
+        cursor.execute("""
+    SELECT * 
+    FROM payments 
+    ORDER BY date DESC 
+    LIMIT 2
+""")
 
-        cursor.execute("SELECT * FROM payments")
         payments = cursor.fetchall()
 
 
@@ -102,11 +100,11 @@ def index(request):
         total_amount = cursor.fetchone()[0] or 0
 
 
-        cursor.execute("SELECT * FROM exhibitions")
+        cursor.execute("SELECT * FROM exhibitions LIMIT 2")
         exhibitions = cursor.fetchall()
 
 
-        cursor.execute("SELECT * FROM users")
+        cursor.execute("SELECT * FROM users LIMIT 3")
         user_list = cursor.fetchall()
 
 
@@ -122,75 +120,62 @@ def index(request):
         'total_amount': total_amount,
         'total_revenue': total_revenue,
         'exhibitions': exhibitions,
-        'users': user_list
+        'users': user_list,
+
     })
 
 
-# def todo(request):
-#     user = request.user
-#     todos = Todo.objects.filter(reciver=user)
-#
-#     print(todos)
-#     return render(request, 'todo.html', {'user': user, 'todos': todos})
-#
-#
-# # def exb(request):
-# #     user = request.user
-# #     # todos = Todo.objects.filter(reciver=user)
-# #     return render(request, 'exhibitions.html', {'user': user})
-#
-# from django.shortcuts import render, redirect
-# from .models import Exhibition
-#
-# def exb(request):
-#     if request.method == 'POST':
-#         Exhibition.objects.create(
-#             event_name=request.POST.get('event_name'),
-#             start_date=request.POST.get('start_date'),
-#             end_date=request.POST.get('end_date'),
-#             city=request.POST.get('city'),
-#             venue=request.POST.get('venue'),
-#             host=request.POST.get('host'),
-#             organizer=request.POST.get('organizer'),
-#             sector=request.POST.get('sector'),
-#             phone=request.POST.get('phone'),
-#             email=request.POST.get('email'),
-#             website=request.POST.get('website')
-#         )
-#         return redirect('exb')
-#
-#     exhibitions = Exhibition.objects.all()
-#     return render(request, 'exhibitions.html', {'exhibitions': exhibitions})
-#
-#
-#
-# def userlist(request):
-#     user = request.user
-#     # todos = Todo.objects.filter(reciver=user)
-#     return render(request, 'users.html', {'user': user})
-#
-#
-#
-#
-#
-#
-# def delete_exhibition(request):
-#     exhibition_id = request.POST.get('id')
-#     try:
-#         exhibition = Exhibition.objects.get(id=exhibition_id)
-#         exhibition.delete()
-#     except Exhibition.DoesNotExist:
-#         pass  # Agar ma'lumot topilmasa hech narsa qilma
-#     return redirect('exb')  # Qayta yuklanadigan sahifa nomi
-#
-#
-# def assign(request):
-#     return  render(request,'assign.html')
-#
-# #
-# # def users_page(request):
-# #     return  render(request,'users.html')
-# #
-#
-#
-#
+
+@login_required
+@company_code_check("site")
+def all_payments(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.execute("SELECT * FROM payments ORDER BY date DESC")
+
+        payments = cursor.fetchall()
+
+    return render(request,'all_payments.html',{'payments': payments})
+
+
+@login_required
+@company_code_check("site")
+def all_todos(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.execute("SELECT * FROM todos")
+
+        todos = cursor.fetchall()
+        user=request.user
+
+    return render(request,'all_todos.html',{'todos': todos,'user':user})
+
+
+
+@login_required
+@company_code_check("site")
+def all_exhibitions(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.execute("SELECT * FROM exhibitions")
+
+        exhibitions = cursor.fetchall()
+        user=request.user
+
+    return render(request,'all_exhibitions.html',{'exhibitions': exhibitions,'user':user})
+
+
+
+
+
+
+@login_required
+@company_code_check("site")
+def all_users(request):
+    with connections['postgres'].cursor() as cursor:
+        cursor.execute("SELECT * FROM users")
+
+        users = cursor.fetchall()
+        user=request.user
+
+    return render(request,'all_users.html',{'users': users,'user':user})
+
+
+

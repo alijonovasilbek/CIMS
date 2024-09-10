@@ -46,8 +46,8 @@
     <!-- Sidebar Start -->
     <div class="sidebar pe-4 pb-3">
         <nav class="navbar bg-secondary navbar-dark">
-                            <a href="http://cognilabs.org/" class="navbar-brand mx-4 mb-3" target="_blank">
-            <h3 class="text-primary">Cognilabs</h3>
+            <a href="http://cognilabs.org/" class="navbar-brand mx-4 mb-3" target="_blank">
+                <h3 class="text-primary">Cognilabs</h3>
             </a>
             <div class="d-flex align-items-center ms-4 mb-4">
                 <div class="position-relative">
@@ -55,16 +55,19 @@
                     <div class="bg-success rounded-circle border border-2 border-white position-absolute end-0 bottom-0 p-1"></div>
                 </div>
                 <div class="ms-3">
-                                            <h6 class="mb-0">{{ user.name }}</h6>
-                                            <span>{{user.email}}</span>
+                    <h6 class="mb-0">{{ user.name }}</h6>
+                    <span>{{ user.email}}</span>
                 </div>
             </div>
             <div class="navbar-nav w-100">
-                                    <a href="{% url 'index1' %}" class="nav-item nav-link active">Dashboard</a>
-                {##}
-                {#                   #}
-                {##}
-                {#                    <a href="{{url_for('exhibitions')}}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Exhibitions</a>#}
+                <a href="{% url 'index' %}" class="nav-item nav-link active">Dashboard</a>
+
+
+
+                <a href="{% url  'all_payments' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Payments</a>
+                <a href="{% url  'all_todos' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Todos</a>
+                <a href="{% url  'all_exhibitions' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Exhibitions</a>
+                <a href="{% url  'all_users' %}" class="nav-item nav-link"><i class="fa fa-th me-2"></i>Users</a>
 
             </div>
         </nav>
@@ -82,9 +85,7 @@
 {#            <a href="#" class="sidebar-toggler flex-shrink-0">#}
 {#                <i class="fa fa-bars"></i>#}
 {#            </a>#}
-{#            <form class="d-none d-md-flex ms-4">#}
-{#                <input class="form-control bg-dark border-0" type="search" placeholder="Search">#}
-{#            </form>#}
+
             <div class="navbar-nav align-items-center ms-auto">
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
@@ -141,34 +142,36 @@
 
 
         {#userlist#}
-        <div class="content-fluid">
-            <div class="container-fluid pt-4 px-4">
-                <div class="row">
+        <div class="  content-fluid" style="padding: 50px">
+            <div class=" bg-secondary container-fluid pt-4 px-4">
+                <div class="bg-secondary row">
                     <div class="col-12">
-                        <div class="card" style="background-color: black; color: red;">
+                        <div class="bg-secondary card" style=" color: red;">
                             <div class="card-body">
                                 <h5 class="card-title">Users List</h5>
                                 <table class="table">
                                     <thead>
                                     <tr>
                                         <th>ID</th>
-                                        <th>First Name</th>
-                                        <th>Last Name</th>
                                         <th>Email</th>
-                                        <th>Username</th>
-                                        <th>Phone Number</th>
+                                        <th>Name</th>
+                                        <th>Surname</th>
+                                        <th>Role</th>
+                                        <th>Rating</th>
+                                        <th>Date Registered</th>
                                         <th>Actions</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {% for user in user_list %}
+                                    {% for user in users %}
                                         <tr id="user-row-{{ user.0}}">
-                                            <td>{{ user.0 }}</td>
                                             <td>{{ user.1 }}</td>
                                             <td>{{ user.2 }}</td>
                                             <td>{{ user.3 }}</td>
                                             <td>{{ user.4 }}</td>
                                             <td>{{ user.5 }}</td>
+                                            <td>{{ user.6 }}</td>
+                                            <td>{{ user.7 }}</td>
                                             <td>
                                                 <button class="btn btn-danger btn-sm delete-user" data-id="{{ user.0 }}">Delete</button>
 
@@ -187,10 +190,6 @@
 
 
 
-
-        <!-- Footer End -->
-    </div>
-    <!-- Content End -->
 
 
     <!-- Back to Top -->
@@ -216,25 +215,25 @@
 {#    <script src="{% static 'js/main.js' %}"></script>#}
 
 </div>
+
 <script>
     $(document).on('click', '.delete-user', function() {
-        var userId = $(this).data('id'); // Get the user ID
-        var csrfToken = '{{ csrf_token }}'; // Get the CSRF token
+        var userId = $(this).data('id'); // Foydalanuvchi ID sini olamiz
+        var csrfToken = '{{ csrf_token }}'; // CSRF token olish
 
         if (confirm('Are you sure you want to delete this user?')) {
             $.ajax({
-                url: "{% url 'index1' %}", 
+                url: "{% url 'index' %}", // DELETE so'rov yo'nalishi
                 type: 'POST',
                 data: {
+                    'delete_user': true,
                     'id': userId,
-                    'delete_user': true, 
-                    'csrfmiddlewaretoken': csrfToken 
+                    'csrfmiddlewaretoken': csrfToken // CSRF tokenini yuborish
                 },
                 success: function(response) {
                     if (response.status === 'success') {
-                        // Remove the user row from the table
+                        // Foydalanuvchi muvaffaqiyatli o'chirilgandan so'ng qatorni olib tashlash
                         $('#user-row-' + userId).remove();
-                        alert('User deleted successfully!');
                     } else {
                         alert('Error: ' + response.message);
                     }
@@ -245,6 +244,8 @@
             });
         }
     });
+
+
 </script>
 
 
