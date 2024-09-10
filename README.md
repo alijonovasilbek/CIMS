@@ -2,6 +2,9 @@
 
 CIMS is a Django-based project designed to simplify the management of multiple websites' admin panels through a single, unified management system. The goal of this project is to provide a streamlined solution for administrators to control and monitor several websites from one central dashboard, enhancing efficiency and scalability.
 
+
+![CIMS Dashboard](user/Pictures/Screenshot_2024-09-10_21_03_51.png)
+
 ## Features
 - Centralized management of multiple website admin panels.
 - User-friendly interface for easy website monitoring and control.
